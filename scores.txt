@@ -1,3 +1,8 @@
-Argentina 3 3 France
+Japan 2 1 Germany
+Spain 7 0 Costa-Rica
+
+Japan 0 1 Costa-Rica
 Germany 1 1 Spain
-Argentina 0 1 Spain
+
+Japan 2 1 Spain
+Germany 4 2 Costa-Rica

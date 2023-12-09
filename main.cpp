@@ -1,121 +1,21 @@
-#include <iostream>
-#include <unordered_map>
-#include <set>
-#include <string>
-#include <vector>
-#include <utility>
-#include <algorithm>
 #include <fstream>
 #include <sstream>
 
-#include "Match.cpp"
+#include "printTable.cpp"
 
 using namespace std;
 
-const int NUM_TEAMS_PER_GROUP = 4;
-const string SPACE = "   ";
-const string HEADER = "    TEAM      GP   W   D   L  GF  GA   GD  Pts";
-
-
-// print standings
-void printTable(vector<Team*> allTeams){
-    vector<pair<string, unordered_map<string, int>>> allPairs;
-    
-    for (auto team : allTeams){
-        team->updateAll();
-        team->printTeamData();
-        string name = team->getName();
-        unordered_map<string, int> teamData = team->getTeamData();
-        
-        
-        pair<string, unordered_map<string, int>> teamPair(name, teamData);
-        allPairs.push_back(teamPair);
-    }
-    
-    // Custom comparator to sort in decreasing order based on "Pts" key in the unordered_map
-    auto comparator = [](const auto& pair1, const auto& pair2) {
-        return pair1.second.at("Pts") > pair2.second.at("Pts");
-    };
-
-    // Sort the vector of pairs
-    sort(allPairs.begin(), allPairs.end(), comparator);
-    
-    
-    cout << HEADER << endl;
-    for (auto&& pair : allPairs) {
-        string name = pair.first;
-        int nameSize = name.length();
-        while (nameSize < 12){
-            name += " ";
-            nameSize++;
-        }
-
-        const unordered_map<string, int>& teamData = pair.second;
-
-        string buffer = "";
-        if (teamData.at("GD") >= 0) {
-            buffer = " ";
-        }
-
-        cout << name << " : "
-            << teamData.at("GP") << SPACE
-            << teamData.at("W") << SPACE
-            << teamData.at("D") << SPACE
-            << teamData.at("L") << SPACE
-            << teamData.at("GF") << SPACE
-            << teamData.at("GA") << SPACE
-            << buffer
-            << teamData.at("GD") << SPACE
-            << teamData.at("Pts") << endl;
-    }
-}
-
-
-// vector<Team> determineAllTeams(){
-//     ifstream inputFile("scores.txt");
-
-//     if (!inputFile){
-//         cerr << "error opening file!" << endl;
-//     }
-
-//     string line;
-//     set<string> allTeamNames;
-//     while (getline(inputFile, line)){
-//         istringstream iss(line);
-//         string teamName1, s_score1, s_score2, teamName2;
-//         iss >> teamName1 >> s_score1 >> s_score2 >> teamName2;
-//         allTeamNames.insert(teamName1);
-//         allTeamNames.insert(teamName2);
-//     }
-
-//     vector<Team> allTeams;
-
-//     for (const auto& name : allTeamNames){
-//         Team newTeam(name);
-//         allTeams.push_back(newTeam);
-//     }
-
-//     return allTeams;
-// }
-
-
-
 
 int main(){
-
-    // vector<Team> allTeams = determineAllTeams();
-    // vector<Team*> allTeamsPtr;
-    // for(auto team : allTeams){
-    //     allTeamsPtr.push_back(&team);
-    // }
-
-    Team team1("Argentina");
-    Team team2("France");
+    // instanciate teams (must do manually)
+    Team team1("Costa-Rica");
+    Team team2("Spain");
     Team team3("Germany");
-    Team team4("Spain");
+    Team team4("Japan");
     
     vector<Team*> allTeamsPtr = {&team1, &team2, &team3, &team4};
 
+    // open file
     ifstream inputFile("scores.txt");
 
     if (!inputFile){
@@ -125,7 +25,15 @@ int main(){
 
     string line;
 
+    // loop through every line in text file
     while (getline(inputFile, line)){
+
+        // skip line if its empty
+        if (line.length() == 0) {
+            continue;
+        }
+
+        // first team    --   goals scored by first team   --   goals scored by second team   --   second team
         istringstream iss(line);
         string teamName1, s_score1, s_score2, teamName2;
         iss >> teamName1 >> s_score1 >> s_score2 >> teamName2;
@@ -133,6 +41,8 @@ int main(){
         int i_score2 = stoi(s_score2);
         Team* firstTeam;
         Team* secondTeam;
+
+        // find Team object in allTeamsPtr by matching name
         for (auto team : allTeamsPtr){
             if (teamName1 == team->getName()){
                 firstTeam = team;
@@ -140,13 +50,13 @@ int main(){
             else if (teamName2 == team->getName()){
                 secondTeam = team;
             }
-            else{
-                cout << "team not found" << endl;
-            }
         }
+
+        // play the match avec update results for each team
         Match match(firstTeam, i_score1, i_score2, secondTeam);
     }
 
+    // print the group table
     printTable(allTeamsPtr);
 }
 
