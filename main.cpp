@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <set>
 #include <string>
 #include <vector>
 #include <utility>
@@ -69,15 +70,51 @@ void printTable(vector<Team*> allTeams){
     }
 }
 
+
+// vector<Team> determineAllTeams(){
+//     ifstream inputFile("scores.txt");
+
+//     if (!inputFile){
+//         cerr << "error opening file!" << endl;
+//     }
+
+//     string line;
+//     set<string> allTeamNames;
+//     while (getline(inputFile, line)){
+//         istringstream iss(line);
+//         string teamName1, s_score1, s_score2, teamName2;
+//         iss >> teamName1 >> s_score1 >> s_score2 >> teamName2;
+//         allTeamNames.insert(teamName1);
+//         allTeamNames.insert(teamName2);
+//     }
+
+//     vector<Team> allTeams;
+
+//     for (const auto& name : allTeamNames){
+//         Team newTeam(name);
+//         allTeams.push_back(newTeam);
+//     }
+
+//     return allTeams;
+// }
+
+
+
+
 int main(){
 
+    // vector<Team> allTeams = determineAllTeams();
+    // vector<Team*> allTeamsPtr;
+    // for(auto team : allTeams){
+    //     allTeamsPtr.push_back(&team);
+    // }
 
     Team team1("Argentina");
     Team team2("France");
     Team team3("Germany");
     Team team4("Spain");
     
-    vector<Team*> allTeams = {&team1, &team2, &team3, &team4};
+    vector<Team*> allTeamsPtr = {&team1, &team2, &team3, &team4};
 
     ifstream inputFile("scores.txt");
 
@@ -96,7 +133,7 @@ int main(){
         int i_score2 = stoi(s_score2);
         Team* firstTeam;
         Team* secondTeam;
-        for (auto team : allTeams){
+        for (auto team : allTeamsPtr){
             if (teamName1 == team->getName()){
                 firstTeam = team;
             }
@@ -109,66 +146,8 @@ int main(){
         }
         Match match(firstTeam, i_score1, i_score2, secondTeam);
     }
-    
-    printTable(allTeams);
+
+    printTable(allTeamsPtr);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// #include <iostream>
-// #include <fstream>
-// #include <vector>
-// #include <sstream>
-
-// struct Person {
-//     std::string firstName;
-//     std::string lastName;
-//     int age;
-// };
-
-// int main() {
-//     std::ifstream inputFile("data.txt");
-
-//     if (!inputFile) {
-//         std::cerr << "Error opening file!" << std::endl;
-//         return 1;
-//     }
-
-//     std::vector<Person> people;
-//     std::string line;
-
-//     while (std::getline(inputFile, line)) {
-//         std::istringstream iss(line);
-//         Person person;
-
-//         // Read data from the line separated by spaces
-//         iss >> person.firstName >> person.lastName >> person.age;
-
-//         // Add the person to the vector
-//         people.push_back(person);
-//     }
-
-//     // Print the organized data
-//     for (const auto& person : people) {
-//         std::cout << "First Name: " << person.firstName << ", Last Name: " << person.lastName
-//                   << ", Age: " << person.age << std::endl;
-//     }
-
-//     return 0;
-// }
-
-
-
-
-
 
 
